@@ -1,0 +1,31 @@
+1. 
+Write SQL queries to calculate the following.
+(a) For each waypoint, calculate the distance from home as the crow flies, i.e., the earth distance between home and the waypoint. The result lists the waypoint id and the earth distance between home
+and the waypoint.
+(b) For each waypoint, calculate the actually cycled (waypoint to waypoint) distance from home. The result lists the waypoint id and the cycled distance between home and the waypoint.
+(c) Calculate the estimated slope at each waypoint. The result lists the waypoint id and slope in %.
+
+2. 
+
+CREATE TABLE T (
+id SERIAL PRIMARY KEY ,
+val INTEGER NOT NULL
+);
+INSERT INTO T( val) (
+SELECT floor ( random () *10) ::
+INTEGER AS val
+FROM generate_series (1 ,100) AS _
+);
+Write an SQL query which calculates the id(s) for which the difference of the two sums
+of val with id less than i and larger than i is minimal. The result of the query lists the found id(s) in a single column.
+
+3.
+
+CREATE TABLE Measurements (
+ts TIMESTAMP PRIMARY KEY ,
+val NUMERIC
+);
+
+(a)write an SQL query which replaces each NULL value with the previous most
+recent conclusive measurement. 
+(b)Rewrite the SQL query of (a) accordingly.

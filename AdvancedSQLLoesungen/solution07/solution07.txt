@@ -1,0 +1,111 @@
+Aufgabe 1
+
+a)
+
+select id,distance(home,po) as earth_distance
+from (
+    select waypoint as home
+    from tour
+    where id=1
+)h, 
+(
+    select id,waypoint as po
+    from tour
+    where id <> 1
+    )pp
+
+
+b)
+
+select id,sum(ppdis) over (order by id) as cycled_distance
+from (
+select id, distance(p0,p1) as ppdis
+from (
+    select id0 + 1 as id,waypoint as p1,p0
+    from (
+        select id as id0,waypoint as p0
+        from tour
+        )pp,tour
+    where id = id0 + 1
+    )ppp
+    )pppp
+
+
+c)
+
+select id,round(((e1 - e0)/ppdis *100) :: numeric,2) as slope_in_percent  
+from (
+select id, distance(p0,p1) as ppdis,e1,e0
+from (
+    select id0 + 1 as id,waypoint as p1,p0, elevation as e1,e0
+    from (
+        select id as id0,waypoint as p0, elevation as e0
+        from tour
+        )pp,tour
+    where id = id0 + 1
+    )ppp
+    )pppp
+
+
+
+Aufgabe 2
+
+with newT as( -- this table is used to get all the records id and difference
+    select id,abs(realr-reall) as diff 
+    from (
+        select (rightv - val) as realr,(leftv - val) as reall,id,val
+        from (
+            select id,sum(val) over(order by id desc) as rightv, sum(val) over(order by id asc) leftv, val
+            from T
+        )vl
+    )v2
+),
+newT2 as( -- this table is used to get the min difference of left and right
+    select min(abs(realr-reall)) as m 
+    from (
+        select (rightv - val) as realr,(leftv - val) as reall,id,val
+        from (
+            select id,sum(val) over(order by id desc) as rightv, sum(val) over(order by id asc) leftv, val
+            from T
+        )vl
+    )v2
+)
+select id
+from newT,newT2
+where diff = m
+
+
+
+Aufgabe 3
+
+a)
+
+select ts,case
+	when val is null then first_value(val) over(partition by vp)
+    else val 
+    end as val
+from (
+    select ts,val,sum(case when val is null then 0 else 1 end) over (order by rn) as vp
+    from (
+        select ts,val,row_number() over() as rn
+        from Measurements    
+    )rnn
+)l
+
+
+
+b)
+
+select ts,case
+	when val is null and vp = 0 then 0
+	when val is null then first_value(val) over(partition by vp)
+    else val 
+    end as val
+from (
+    select ts,val,sum(case when val is null then 0 else 1 end) over (order by rn) as vp
+    from (
+        select ts,val,row_number() over() as rn
+        from Measurements    
+    )rnn
+)l
+

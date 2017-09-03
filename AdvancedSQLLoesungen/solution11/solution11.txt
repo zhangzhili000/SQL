@@ -1,0 +1,85 @@
+Aufgabe 1
+
+WITH RECURSIVE
+CTE(n,x,y,z) AS (
+	SELECT 0,x,y,z
+    FROM heat
+    union all
+    SELECT n+1,x,y,(
+        (0.1*(
+            (
+                case when x = 0 then 0
+                else lag(z) over(order by y,x) end -- as "z(x-1,y)"                             
+            )
+            -2*z + 
+            (
+                case when x = 4 then 0
+                else lead(z) over(order by y,x) end -- as "z(x+1,y)"                     
+            )+ 
+            (
+                case when y = 0 then 0
+                else lag(z) over(order by x,y) end -- as "z(x,y-1)"     
+            )
+            - 2*z + 
+            (
+                case when y = 4 then 0
+                else lead(z) over(order by x,y)end -- as "z(x,y+1)"              
+            )
+        ))+z) as z
+    FROM CTE   
+    where n < 5
+)
+select n, x, y, z
+from CTE
+
+
+
+Aufgabe 2
+
+WITH 
+North as (
+	select x, generate_series(1,y) as y
+    from room 
+    where dir = 'N'   
+),
+South as (
+	select x, generate_series(y,4) as y
+    from room 
+    where dir = 'S'   
+),
+West as (
+	select generate_series(1,x) as x, y
+    from room 
+    where dir = 'W'   
+),
+Est as (
+	select generate_series(x,4) as x, y
+    from room 
+    where dir = 'E'   
+),
+Allpoints as (
+    select  generate_series(1,4) as x,  y
+    from (select generate_series(1,4) as y )t
+),
+NoGoPoints as (
+	select x,y
+    from North 
+    union all 
+    select x,y
+    from South 
+    union all 
+    select x,y
+    from Est
+    union all
+    select x,y
+    from West
+    union all
+    select x,y
+    from room
+    where dir = 'X'
+)
+select a.x,a.y
+from Allpoints as a left join NoGoPoints as n on a.x = n.x and a.y = n.y
+where n.x is null
+
+

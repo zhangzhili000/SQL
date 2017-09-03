@@ -1,0 +1,92 @@
+Aufgabe 1
+
+WITH RECURSIVE 
+SUMS (SUBSET_SUM, MAX_ID) AS (
+    SELECT weight,item
+    FROM items
+    
+    UNION ALL
+    
+    SELECT weight + SUBSET_SUM,item
+    FROM SUMS
+    JOIN items ON SUMS.MAX_ID < items.item
+),
+getMin as (
+     SELECT Planes.plane,Planes.allowance,MIN (abs(allowance - SUBSET_SUM))AS CLOSEST_SUM, SUBSET_SUM
+     FROM SUMS
+     CROSS JOIN Planes
+     GROUP BY planes.plane, planes.allowance, SUBSET_SUM
+),
+getPlane as (
+    select min(CLOSEST_SUM) as minDiff 
+    from getMin
+)
+select getMin.plane, getMin.allowance, SUBSET_SUM as "total weight"
+from getPlane, getMin
+where minDiff = getMin.CLOSEST_SUM
+
+
+
+Aufgabe 2
+
+(a)
+with city 
+AS(
+  TABLE Roads
+
+    UNION
+
+  SELECT r.there AS "here", r.dist, r.here AS "there"
+  FROM   roads as r
+
+)
+
+select c.here,c.dist,c.there  from city as c
+
+order by c.here,c.there
+
+(b)
+
+WITH RECURSIVE edges AS (
+  SELECT here, dist, there FROM roads
+  UNION all
+  SELECT there, dist, here 
+  FROM roads
+), 
+
+all_path(here,there,dist,path,depth,cycle)as
+(      select here,there,dist,ARRAY[here],1,'f'::BOOLEAN
+       from edges
+       
+ union 
+       select all_path.here,
+       edges.there,
+       edges.dist + all_path.dist,
+       all_path.path || ARRAY[edges.here],
+       depth + 1,
+       edges.here= ANY(all_path.path)
+       FROM all_path
+  JOIN edges
+       ON all_path.there = edges.here
+       AND NOT cycle
+),
+a_f as(
+
+select * from all_path
+where depth=5 and path[1]=path[5]  and path[1]!=path[2] and path[2]!=path[3] and path[3]!=path[4]
+
+order by dist
+    ),
+    
+a_f2 as
+( 
+ select edges.dist as value,a_f.dist,a_f.path from a_f,edges
+where edges.here=a_f.here and edges.there=a_f.there
+order by a_f.dist
+)
+select DISTINCT path as "visited in order" ,a_f2.dist-a_f2.value as "total distance"
+from a_f2
+order by "total distance"
+LIMIT 1
+
+

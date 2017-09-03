@@ -1,0 +1,82 @@
+Aufgabe 01
+
+(a)
+select elem as elem
+from TEXT_Arrays
+where a_id = 1 and idx = 1;
+
+(b)
+select count(elem) as len
+from TEXT_Arrays
+where a_id = 1;
+
+(c)
+select elem as elems
+from TEXT_Arrays
+where a_id = 2;
+
+(d)
+select idx as pos
+from TEXT_Arrays
+where a_id = 1 and elem = 'b'
+limit 1;
+
+(e)
+TABLE TEXT_Arrays
+
+union
+
+select (r.v + 1)as a_id, i.d+1 as idx, 'd'::TEXT as elem
+from Text_Arrays,
+( SELECT MAX(t. a_id )
+FROM Text_Arrays AS t) AS r(v),
+( SELECT MAX(A. idx )
+FROM Text_Arrays AS A) AS i(d)
+where a_id=1
+
+union
+
+select (r.v + 1)as a_id, idx as idx,elem as elem
+from Text_Arrays,
+( SELECT MAX(t. a_id )
+FROM Text_Arrays AS t) AS r(v)
+where a_id=1
+
+order by a_id,idx;
+
+
+Aufgabe 02
+
+SELECT array_agg(v ORDER BY j) matrix  --merge the rows into the new matrix
+FROM (  
+    SELECT mn, j, array_agg(v ORDER BY i) AS v  --merge the value which has the same col j in the same matrix as rows in the transposed matrix
+    FROM (
+        SELECT mn, i, j, matrix[i][j] AS v  --save all the values in matrix into the coloum v with the row i and col j
+        FROM (
+            SELECT generate_subscripts(matrix, 2) j,mn,i,matrix --get the 2dimentional subscripts, j means col
+            FROM ( 
+                SELECT ROW_NUMBER() OVER () AS mn,  --use row_number to get the number of matrix
+                       generate_subscripts(matrix, 1) AS i, --use generate_subscripts() to get the 1 dimentional subscripts, i means row
+                       matrix                
+                FROM matrices
+            ) d1
+        ) d2  
+    ) mr
+    GROUP BY mn, j
+) mc
+GROUP BY mn
+ORDER BY mn;
+
+
+Aufgabe 03
+
+select tree,children_of,sum(labels) 
+from(
+  select tree,children_of,labels
+  from(
+    select tree,unnest(parents) as children_of,unnest(labels)as labels 
+    from trees)ch --this ch table is used for unnest(parents) and unnest(labels)
+  where children_of is not null)su --this su table is used to get the not null parents
+group by tree,children_of --use the sum() and group by the get the sum(labels) of each parent
+order by tree,children_of
+;

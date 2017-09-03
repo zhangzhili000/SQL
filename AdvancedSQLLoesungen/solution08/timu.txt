@@ -1,0 +1,30 @@
+1.
+CREATE TABLE Work_Log (
+emp_id INTEGER ,
+login DATE
+);
+查询最大连续登陆的天数
+
+2. 
+Based on the slides of the lecture1, you are given a run-length encoding (RLE) implementation using SQL.
+(a) Write an SQL query which decodes a previously encoded input. Use table encoding as the input to your query. Your result table should match the schema of table original.
+(b) The SQL query in the provided file performs a row-based RLE (pixel row by pixel row). Provide a variant of the query which performs RLE in a column-based fashion.
+(c) Write an SQL query which determines if the original and the decoded tables are identical.
+
+3. 
+金银硬币100个
+
+CREATE TYPE coin AS ENUM ('gold ',
+'silver ');
+DROP TABLE IF EXISTS Coins ;
+CREATE TABLE Coins (id serial PRIMARY KEY ,
+coin coin );
+INSERT INTO Coins ( coin ) (
+SELECT CASE WHEN random () < 0.3
+THEN 'gold '
+ELSE 'silver '
+END :: coin AS coin
+FROM generate_series (1 ,100) AS _
+);
+
+Write an SQL query, which returns the treasure chests and how many coins they hold in order of how they were supplied with coins.

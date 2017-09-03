@@ -1,0 +1,33 @@
+1. 
+SELECT locomotion .legs , tallest . species , tallest . height
+FROM ( VALUES (2) , (4)) AS locomotion ( legs ),
+LATERAL ( SELECT d.*
+FROM Dinosaurs AS d
+WHERE d. legs = locomotion . legs
+ORDER BY d. height DESC
+LIMIT 3) AS tallest ;
+Rewrite the SQL query without the use of LATERAL.
+
+2.
+-- Define result as type alias for NUMERIC (3 ,1).
+CREATE DOMAIN result AS NUMERIC (3 ,1);
+CREATE TABLE Analysis (
+dataset CHAR (1) ,
+x NUMERIC ,
+y NUMERIC
+);
+\ copy Analysis FROM '/ ABSOLUTE / path /to/ data .csv ' WITH ( FORMAT csv , HEADER TRUE );
+(a) Write an SQL query which calculates the mean of x as well as y, the standard deviation of x as well as y and the correlation coefficient of columns x and y1. Each of the results has to be of type result,as previously defined. 
+
+3.
+
+CREATE TABLE Lists (
+id INTEGER NOT NULL ,
+pos INTEGER NOT NULL ,
+slice TEXT [] NOT NULL ,
+CONSTRAINT list_id_range CHECK (id
+>= 1 AND id <= 3) ,
+PRIMARY KEY (id , pos )
+);
+
+Write an SQL query which returns a table that holds one column for each of the three lists. Additionally,add a column i to represent each index of each element in the nal list. In each list, concatenate the slices in ascending pos order.

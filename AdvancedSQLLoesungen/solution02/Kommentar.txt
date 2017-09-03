@@ -1,0 +1,31 @@
+
+1) 14.5
+
+1d) Lässt sich so leider nicht ausführen ;)
+
+	select avg(m) filter (where t between 0  and 5) as "avg_m in region 0-5",
+               avg(m) filter (where t between 5 and 10) as "avg_m in region 5-10¡±,
+               avg(m) filter (where t between 10 and 15) as "avg_m in region 10-15¡± 
+        from Measurements;
+    Ihr habt in den 2 Zeilen nach SELECT die schließende '"' vergessen. In Zukunft hier 
+    bisschen aufpassen.
+
+    Eure Lösung besitzt keine allgemeingültigkeit. Eure query ist auf die Daten zugeschnitten.
+    Das ist zwar kein Problem, kann schnell umständlich werden.
+    Laut Aufgabe waren die Bereiche wie folgt gegeben [0h - 5h), [5h - 10h) ....
+    Das heißt, im ersten Intervall ist die 0h drin aber die 5h nicht mehr, im zweiten
+    Intervall ist die 5h drin aber die 10h nicht mehr. Das berücksichtigt ihr mit eurer query nicht
+
+    Möglich wäre gewesen: SELECT floor(t/5) AS part , AVG(m)
+			  FROM  Measurements
+			  GROUP BY floor(t/5)
+			  ORDER  BY floor(t/5);  -0.5p
+
+2) 13
+
+
+Ihr habt bei den querys a) - c) nicht A als obersten Knoten sondern NULL
+Durch HAVING COALESCE(level_d ,level_c ,level_b ,level_a) IS NOT  NULL; hättet ihr dies verhindern können -2p
+
+Für die weiteren Abgaben könnt ihr die querys vielleicht in eine .sql packen damit diese schnell ausgeführt werden kann.
+Eigentlich solltet ihr eure Aufgaben auch etwas kommentieren.

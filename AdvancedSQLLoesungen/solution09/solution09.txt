@@ -1,0 +1,58 @@
+Aufgabe 1
+
+WITH RECURSIVE t(n,a,b) AS (
+        VALUES(1,1,1)
+    UNION ALL
+        SELECT (n+1) as n, b as a, (a + b) as b FROM t
+        WHERE n < 30
+   )
+SELECT n,a as "f(n)" FROM t
+order by n desc;
+
+
+
+Aufgabe 2
+
+
+WITH RECURSIVE
+
+paths (tree , pos , node ) AS (
+    select tree, pos, node, row_number() over() as rn
+    from (
+    SELECT t.tree , 0 AS pos , unnest(array_positions (t. labels , 'f')) AS  node
+    FROM Trees AS t
+        )ll
+    UNION
+    SELECT t.tree , p. pos + 1 AS pos , t. parents [p. node]  AS node, rn
+    FROM paths AS p, Trees AS t
+    WHERE p. tree = t. tree AND p. node IS NOT NULL 
+)
+select tree, pos, node ,
+array_to_string(array(select pn.node from paths as pn where p.tree = pn.tree and pn.rn = p.rn ), ', ') as "path"
+    from paths as p
+
+WHERE p. node IS NOT NULL
+ORDER BY p.tree , "path", p.pos;
+
+
+
+Aufgabe 3
+
+WITH RECURSIVE
+paths (here , dist , there, fuel) AS (
+    
+    values ('Saarbruecken',0,'Saarbruecken',100)
+    
+    union all
+
+    select paths.there as here, roads.dist as dist, roads.there as there, case
+    when cities.fuel = 1 then 100
+    else (paths.fuel - roads.dist)
+    end as fuel
+    from paths, roads, cities
+    where paths.there = roads.here and (paths.fuel - roads.dist) >= 0 and cities.city = roads.there
+)
+select  distinct paths.there as "reachable city"
+from paths
+
+

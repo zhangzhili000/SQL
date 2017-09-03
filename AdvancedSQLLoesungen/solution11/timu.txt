@@ -1,0 +1,24 @@
+1.
+计算一个公式，循环n次。
+
+2.
+
+CREATE TABLE Room (
+x int NOT NULL ,
+y int NOT NULL ,
+dir char (1) NOT NULL CHECK (dir IN
+('E','W','N','S','X')),
+PRIMARY KEY (x,y)
+);
+
+\set width 4
+\set height 4
+INSERT INTO Room (x,y, dir) VALUES
+(1, 1, 'E'), (3, 1, 'S'),
+(4, 1, 'S'), (2, 3, 'S'),
+(3, 3, 'W'), (2, 4, 'E'),
+(4, 4, 'X');
+
+上表为骑士可能的走向，例如，在(1,1)处，向东走。
+
+write an SQL query which calculates every position in a rectangular room which is safe from stormtroopers patroling through the room.

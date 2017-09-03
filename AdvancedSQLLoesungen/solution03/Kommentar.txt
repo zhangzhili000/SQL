@@ -1,0 +1,8 @@
+
+1) 9
+
+
+b)
+Mit der Frage wollte man eigentlich darauf abziehlen, das die subquery 1 (welche unkorreliert ist) einfacher zu extrahieren geht als die korrelierte subquery (2). Hier hat man nämlich z.B. eine Korrelation T.y. Das heißt, ihr benötigt in der WITH CLAUSE beide Tabellen.
+
+2) 20

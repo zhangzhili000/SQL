@@ -1,0 +1,11 @@
+
+1) 5
+
+
+2) 10
+
+3) 14
+
+e) Eure Lösung ist gut, behandelt aber nicht den Fall für z.B. {1}{W/U}{W/U}
+   Im Forum wurde schon gefragt, wie z.B. Manakosten der Form {W/U} gehandhabt werden sollen.
+   Die Antwort war dazu, das dies nicht als {U} zählt. -1p

@@ -1,0 +1,69 @@
+Aufgabe 01
+
+SELECT legs, species, height
+FROM (
+    (select *
+     from Dinosaurs AS d
+     WHERE  d.legs = 2
+     ORDER BY d.height DESC
+     LIMIT 3)
+    union
+    (select *
+     from Dinosaurs AS d
+     WHERE  d.legs = 4
+     ORDER BY d.height DESC
+     LIMIT 3)
+     )d
+order by legs,d.height DESC;
+
+
+Aufgabe 02
+
+(a)
+
+select dataset,
+avg(x)::result as x_mean,
+avg(y)::result as y_mean,
+stddev(x)::result as x_stddev,
+stddev(y)::result as y_stddev, 
+corr(Y, X)::result as correlation
+from Analysis
+group by dataset
+order by dataset;
+
+
+Compare these statistical measures, we can see that every value of them are the same.
+
+(b)
+
+a:dinosaur, b:bone, c:pentagram, d:Oval, e:double Oval.
+
+
+Aufgabe 03
+
+with t as (
+    select n.arr as arr, row_number() over() as i
+    from 
+    (values (1),(2),(3)) as idd(i),
+    LATERAL(select array_agg(slice) arr
+            from lists
+            where id=idd.i)as n
+),
+list1 as (
+    select arr
+    from t
+    where i = 1
+),
+list2 as (
+    select arr
+    from t
+    where i = 2
+),
+list3 as (
+    select arr
+    from t
+    where i = 3
+)
+select r.i as list_1, r.j as list_2, r.k as list_3,row_number() over() as i
+from list1,list2,list3,rows from(unnest(list1.arr),unnest(list2.arr),unnest(list3.arr)) as r(i,j,k)
+

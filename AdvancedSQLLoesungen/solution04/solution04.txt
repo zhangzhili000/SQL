@@ -1,0 +1,104 @@
+Aufgabe 01
+
+create table P(a int, b MONEY, c float);
+insert into P(a,b,c) values (1, '2':: MONEY ,4) ,(2,'$5.72 ' ,1.32) ,(3,'$2 ':: MONEY ,5.77);
+
+Aufgabe 02
+
+DROP TABLE IF EXISTS Point CASCADE;
+DROP TABLE IF EXISTS Circle CASCADE;
+
+CREATE TABLE Point(
+id int,
+P point
+);
+CREATE TABLE Circle(
+c circle
+);
+--The table to storage all the points in the circle
+INSERT INTO Circle VALUES (circle(point '(0.5,0.5)',0.5));
+INSERT INTO Count VALUES (0);
+--generate the points in the area 1x1
+do $$
+declare
+v_idx integer := 1;
+begin
+  while v_idx < 10001 loop
+    insert into Point(id,P) values (v_idx,point(random(),random()));
+    v_idx = v_idx + 1;
+  end loop;
+end $$;
+--get the compute result
+SELECT count(Point.P)*4/10000 :: decimal AS Pi 
+FROM Point,Circle
+WHERE Circle.c ~ Point.P;
+
+Aufgabe 03
+a)
+--create the emporary table JSON_data, and read the JSON file 
+SET NAMES 'utf8';
+DROP TABLE IF EXISTS JSON_data CASCADE;
+CREATE TEMPORARY TABLE JSON_data (
+data JSON
+);
+COPY JSON_data FROM E'C:/study/UniTuebingen/AdvancedSQL/homework/asql-ss17-ZZLYZX/assignment04/AllCards.json';
+DROP TABLE IF EXISTS MTJ CASCADE;
+CREATE TABLE MTJ (
+name TEXT PRIMARY KEY ,
+manaCost TEXT ,
+cmc NUMERIC ,
+type TEXT ,
+text TEXT ,
+power TEXT ,
+toughness TEXT
+);
+
+--access the JSON attributes from table JSON_data
+
+select * from JSON_data;
+
+--populate the MTJ 
+
+insert into MTJ
+select card->>'name' as name,
+card->>'manaCost' as manaCost,
+(card#> '{cmc}') ::text::NUMERIC as cmc,
+card->>'type' as type,
+card->>'text' as text ,
+card->>'power' as power  ,
+card->>'toughness' as toughness 
+from JSON_data,(select row_to_json(json_each(data))->'value' as card
+from json_data)jdata;
+select * from MTJ;
+
+b)
+List the cards with maximum and minimum cmc value. Disregard cards with a cmc value of 0 or less.
+
+select * from MTJ where cmc = (select max(cmc) from MTJ where cmc > 0 and cmc is not null);
+select * from MTJ where cmc = (select min(cmc) from MTJ where cmc > 0 and cmc is not null);
+
+c)
+List all cards of type Enchantment but exclude cards of type Enchantment-Aura.
+
+select * from MTJ where type ~* 'Enchantment' and type !~* 'Aura';
+
+d)
+List the first five cards with the highest cmc.
+
+select * 
+from MTJ 
+where cmc is not null 
+and (Power::NUMERIC > 14 or toughness::NUMERIC > 14 or Power::NUMERIC < toughness::NUMERIC) 
+and position('*' in power) = 0 and  position('*' in toughness) = 0
+order by cmc desc
+limit 5;
+
+e)
+
+select * 
+from MTJ 
+--use null to replace the 'U', and compute the difference after replace, then the difference is the number of 'U'
+where (char_length(manaCost)-char_length(replace(manaCost,'U',''))) < 4 
+and (char_length(manaCost)-char_length(replace(manaCost,'U',''))) > 0
+order by name asc;
+

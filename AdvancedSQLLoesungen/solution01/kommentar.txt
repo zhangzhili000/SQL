@@ -1,0 +1,13 @@
+asql-ss17-zzlyzx:
+
+2)  5 -  5
+
+Normalerweiße ist hier "guter Stil" zuerst mit DROP TABLE R sicherzustellen, falls
+eine Tabelle des gleichen Names existiert, diese zunächst zu löschen. Hierdurch
+vermeidet ihr unter Umständen Datenkonflikte
+
+
+3) 10 - 10
+
+4) 15 - 15 
+

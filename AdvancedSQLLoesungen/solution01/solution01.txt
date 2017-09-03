@@ -1,0 +1,25 @@
+Aufgabe2
+Create an instance of the table R with schema R(a INTEGER, b INTEGER)
+
+CREATE TABLE R(a INT, b INT);
+INSERT INTO R VALUES (1,1),(1,2),(3,2),(3,5),(4,6),(3,2),(5,5),(2,1),(6,1),(5,3),(7,3);
+
+Aufgabe3
+Write an SQL query which lists all product_names of completed production cycles once.
+
+SELECT product_name FROM ProductionCycles GROUP BY product_name HAVING EVERY(completion_date is not NULL);
+
+Aufgabe4
+a.Write an SQL query, which performs a matrix multiplication A*B.
+
+CREATE VIEW MatrixC(row, col, val)
+AS
+SELECT A.row,B.col,SUM(A.val * B.val)
+FROM A,B
+WHERE A.col = B.row
+GROUP BY A.row,B.col
+ORDER BY A.row,B.col;
+
+b.Is it possible to apply the SQL query from (a) to the following matrices in which some entries are
+missing? Explain.
+Yes. It is possible. The multiplication of Matrix is select a row m in A, and select a colum k in B, then compute SUM(A.mn X B.nk). Because the missing value are not in tables. Then they will not be compute. The result is the same as number times zero. If we assume that, all the elements that are not showed in view MatrixC are zero, then the result is right. For this example in this assignment, the result should be 2X3 Matrix (7,3,38;21,42,0), and the result of the query is (7,3,38;21,42), it missed the value in row2 col3, if we assume this value is 0, then it is right result.

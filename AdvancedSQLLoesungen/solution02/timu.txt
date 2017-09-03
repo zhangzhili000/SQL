@@ -1,0 +1,42 @@
+1. [15 Points]
+Measurements Note
+t (in hours) m(t)
+1:0 1:0; 3:0; 5:0
+2:5 0:8; 2:0
+4:0 0:5
+5:5 3:0
+8:0 2:0; 6:0; 8:0
+10:5 1:0; 3:0; 8:0
+
+Write SQL queries for the following tasks she asks you to do next.
+(a) Create a table Measurements(t NUMERIC, m NUMERIC) based on the note.Define an appropriate PRIMARY KEY and populate the table with the measurements of the note.
+(b) Calculate the global maximum of the measurements m(t).
+(c) For each t, calculate the average of each measurement m(t).
+(d) Find the average of all measurements m(t) in each 5-hour timeframe starting from hour zero (i.e.[0h-5h), [5h-10h), [10h-15h), . . . ).
+(e) Find those times t at which the global maximum was recorded.
+
+2. [15 Points]
+
+CREATE TABLE Tree (
+level_a CHAR (2) ,
+level_b CHAR (2) ,
+level_c CHAR (2) ,
+level_d CHAR (2) ,
+leaf_value INTEGER
+);
+
+INSERT INTO Tree VALUES
+('A1 ', 'B1 ', 'C1 ', 'D1 ', 1) ,
+('A1 ', 'B1 ', 'C1 ', 'D2 ', 2) ,
+('A1 ', 'B1 ', 'C2 ', 'D3 ', 4) ,
+('A1 ', 'B1 ', 'C2 ', 'D4 ', 8) ,
+('A1 ', 'B2 ', 'C3 ', 'D5 ', 16) ,
+('A1 ', 'B2 ', 'C3 ', 'D6 ', 32) ,
+('A1 ', 'B2 ', 'C4 ', 'D7 ', 64) ,
+('A1 ', 'B2 ', 'C4 ', 'D8 ', 128) ;
+
+(a) Given Tree, write an SQL query using GROUP BY ROLLUP which calculates each non-leaf value by adding together its child values.
+
+(b) Write an SQL query based on (a), to determine how many leaf nodes exist below each node.
+
+(c) Consider each leaf value to be a contestant in a tournament and only the higher number proceeds up to the next parent node. On a tie, either number proceeds. Write an SQL query based on (a), to determine each node in the tournament.

@@ -1,0 +1,9 @@
+1. [10 Points] WITH or without
+
+(a) Extract the subqueries of 1) and 2) into CTEs (common table expressions) using WITH and, if necessary, modify them while still maintaining the same results.
+(b) Is extracting one subquery more straightforward than the other? Explain.
+
+2. [20 Points] King and Knight
+
+(a) Write an SQL query to complete the CTE board_and_pieces. 
+(b) Write an SQL query to complete the CTE possible_movement.

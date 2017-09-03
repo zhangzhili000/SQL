@@ -1,0 +1,44 @@
+2. [5 Points] 
+Create an instance of the table R with schema R(a INTEGER, b INTEGER), where the two different queries Q1 and Q2 compute differing results.
+-- Q1
+SELECT R.a, COUNT (*) AS c
+FROM R
+WHERE R.b <> 3
+GROUP BY R.a;
+-- Q2
+SELECT R.a, COUNT (*) AS c
+FROM R
+GROUP BY R.a
+HAVING EVERY (R.b <> 3);
+
+3. [10 Points] 
+We define the table as follows.
+
+CREATE TABLE ProductionCycles (
+product_name CHAR (20) NOT NULL ,
+step INTEGER NOT NULL ,
+completion_date DATE , -- NULL means incomplete
+PRIMARY KEY ( product_name , step )
+);
+
+Write an SQL query which lists all product_names of completed production cycles once. A production cycle is complete, when every completion_date of a cycle is not NULL.
+
+4. [15 Points] Matrix Multiplication
+
+CREATE TABLE A (
+row INTEGER ,
+col INTEGER ,
+val INTEGER ,
+PRIMARY KEY (row , col )
+);
+
+CREATE TABLE B (
+row INTEGER ,
+col INTEGER ,
+val INTEGER ,
+PRIMARY KEY (row , col )
+);
+
+(a) Write an SQL query, which performs a matrix multiplication A * B.
+
+(b) Is it possible to apply the SQL query from (a) to the following matrices in which some entries are missing? Explain.

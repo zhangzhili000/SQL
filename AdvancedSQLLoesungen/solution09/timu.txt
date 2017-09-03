@@ -1,0 +1,14 @@
+1. 
+Write an SQL query which calculates each value of the Fibonacci sequence1 up to any value i starting with 1. 
+
+2. 
+
+CREATE TABLE Trees ( tree int PRIMARY KEY ,
+parents int [],
+labels text []);
+
+Adapt the following query such that multiple nodes of the same tree may carry the same label (e.g., label f may occur more than once). 
+
+3. Travel by Car
+your car only holds up to 100 units of fuel and each unit lets you travel a single distance unit. Therefore, if the fuel runs out in the middle of the road, your travels come to an abrupt end. Luckily, some cities allow for refueling.
+write an SQL query, which lists every city you are able to reach with your car.

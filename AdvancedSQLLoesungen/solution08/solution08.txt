@@ -1,0 +1,103 @@
+Aufgabe 1
+
+select emp_id, max(lgtimes) as most_consecutive_days
+from (
+    select emp_id,count (*) as lgtimes
+    from (
+        select emp_id,login,agg,
+        sum(case when agg = '0' then 1 else 0 end) over (partition by emp_id order by login) as value_partition
+        from (
+            select emp_id,login,case
+            when lag(login) over (partition by emp_id) is not null and age(login,lag(login) over (partition by emp_id)) = '1 d'
+            then age(login,first_value(login) over (partition by emp_id))
+            else '0'
+            end  as agg
+            from (
+                select distinct * 
+                from Work_Log
+                order by emp_id,login
+            )WL
+            order by emp_id,login
+        )dd
+        order by emp_id,login
+    )gg
+    group by emp_id, value_partition
+    order by emp_id
+)yy
+group by emp_id
+order by emp_id
+
+
+
+Aufgabe 2
+
+(a)
+
+select pixel,x,y
+from (
+    (
+        select pixel, row_number() over() as r1  -- add the row number to be joined
+        from (
+            select run,length, encoding.pixel,generate_series(1,length) -- decoding the encoding table to pixels
+            from encoding
+        )e1
+    )e2
+    join
+    (
+        select Original.x,Original.y,row_number() over () as r2 -- get the coordinate from original table,and add the row number to be joined
+        from Original
+    )e3
+    on r1=r2
+) e4 -- e4 table holds the pixels from decoding from encoding table , and coordinate from original table
+
+
+(b)
+
+DROP TABLE IF EXISTS encoding;
+CREATE TEMPORARY TABLE encoding AS -- save result for later decoding
+
+WITH
+changes(x,y,pixel,"change?") AS (
+  SELECT o.x, o.y, o.pixel,
+         o.pixel <> LAG(o.pixel, 1, 'undefined') OVER byrow AS "change?"
+  FROM   original AS o
+  WINDOW byrow AS (ORDER BY o.x, o.y) -- scans image column by column
+),
+runs(x,y,pixel,run) AS (
+  SELECT c.x, c.y, c.pixel,
+         SUM(c."change?" :: int) OVER byrow AS run --  true -> 1, false -> 0
+  FROM   changes AS c
+  WINDOW byrow AS (ORDER BY c.x, c.y) -- default: RANGE FROM UNBOUNDED PRECEDING TO CURRENT column => SUM scan
+),
+encoding(run,length,pixel) AS (
+  SELECT r.run, COUNT(*) AS length, r.pixel
+  FROM   runs AS r
+  GROUP BY r.run, r.pixel -- does not affect grouping since run -> pixel (all pixels in a run have the same color)
+  ORDER BY r.run
+)
+TABLE encoding;
+
+
+(c)
+
+select * from decoding,original where decoding.pixel <> original.pixel and decoding.x = original.x and decoding.y = original.y
+-- select all pixels from both original and decoding table, which have the same coordinate but have not the same value. If the result is nothing, then the decoding table is the same as original table.
+
+
+
+Aufgabe 3
+
+select row_number() over() as chest_id, case
+when lag(id) over() is not null then id - lag(id) over()  -- if the coin is not the first coin, its id minus last id, it is the number of coins.
+else id -- if the coin is the first coin, its id is the number of coins.
+end as "# of coins"
+from (
+    select distinct id
+    from (
+            select id,coin,(row_number() over(partition by coin order by id))%3 as rn
+            from Coins 
+            order by id
+        )g1  -- this table numbers all coins depend on the type of coins. 
+    where (rn = 0 and coin = 'gold ') or (id = 100)
+)g3 -- get all ids of gold coins, and the last coin.
+

@@ -1,0 +1,34 @@
+
+1) 8
+
+Leider nicht ganz korrekt. -2p
+
+Folgende Lösung wäre möglich:
+
+-- C: conductivity (speed  of the  simulation \in (0,1))
+\set C 0.1
+-- N: # of  iteration  steps
+\set N 100
+
+WITH  RECURSIVE
+flow(t,x,y,z) AS (
+SELECT 0 AS t, h.x, h.y, h.z
+FROM    Heat AS h
+UNION  ALL
+SELECT f.t + 1 AS t,
+       f.x, f.y,f.z + :C * (
+         SUM(f.z) OVER (PARTITION  BY f.y ORDER BY f.x ROWS  BETWEEN 1
+               PRECEDING  AND 1 FOLLOWING) - 3 * f.z
+       + SUM(f.z) OVER (PARTITION  BY f.x ORDER BY f.y ROWS  BETWEEN 1
+               PRECEDING  AND 1 FOLLOWING) - 3 * f.z
+       ) AS z
+FROM    flow AS f
+WHERE   f.t < :N
+)
+-- Resulting  heat  map (aggregated  only to  render a 2D representation)
+SELECT f.y, array_agg(f.z ORDER  BY f.x) AS z
+FROM    flow AS f
+WHERE   f.t = :N
+GROUP BY f.y;
+
+2) 20

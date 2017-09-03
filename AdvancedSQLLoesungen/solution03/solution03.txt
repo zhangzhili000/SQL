@@ -1,0 +1,48 @@
+Aufgabe1
+(a)
+1)
+with CTE as
+(
+SELECT P.val
+FROM P
+WHERE P.val > 5
+)
+SELECT T.x AS t_x
+FROM T
+WHERE T.x IN (select * from CTE);
+
+2)
+with c as
+(
+SELECT P.val
+FROM P,T
+WHERE P.val > T.y and T.x = P.val 
+)
+
+SELECT T.x AS t_x
+FROM T
+WHERE T.x IN
+( SELECT * from c);
+
+(b)
+yes,if there are many subqueries to deal with ,using CTE can be more starightforward. Using CTE just like getting a temporary table ,  we can directly query in the temporaty table , and it can be many times used. It¡¯s easier to use a Table name instead of the whole subquery expression.
+
+Aufgabe2
+(a)
+SELECT x,y,piece_id,case 
+    when piece_id is null then ' '
+    else piece_id
+  end as descr
+FROM Board
+
+
+
+(b)
+select x,y,case when Board.selected = true then Board.piece_id 
+end as piece_id,
+case when ((x,y) in (SELECT Board.x+Movement.x_mov,Board.y+Movement.y_mov 
+FROM Board,Piece_Movements,Movement 
+WHERE Board.piece_id = Piece_Movements.piece_id and Piece_Movements.mov_id = Movement.id and Board.selected is true))then '0'
+else ' '
+end as descr
+FROM Board,Piece_Movements,Movement

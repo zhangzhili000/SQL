@@ -1,0 +1,42 @@
+Aufgabe1
+a)Create table Measurements. Set primary key t. Populate the table.
+
+create table Measurements(t NUMERIC, m NUMERIC, primary key (t,m));
+Insert into Measurements(t,m) values (1.0,1.0),(1.0,3.0),(1.0,5.0),(2.5,0.8),(2.5,2.0),(4.0,0.5),(5.5,3.0),(8.0,2.0),(8.0,6.0),(8.0,8.0),(10.5,1.0),(10.5,3.0),(10.5,8.0);
+
+b)Calculate the global maximum of the measurements m(t).
+
+select max(m) as global_maximum from Measurements;
+
+c)For each t, calculate the average of each measurement m(t).
+
+select t,avg(m) as avg_m from Measurements group by t order by t;
+
+d)Find the average of all measurements m(t) in each 5-hour timeframe starting from hour zero.
+
+select avg(m) filter (where t between 0  and 5) as "avg_m in region 0-5",
+       avg(m) filter (where t between 5 and 10) as "avg_m in region 5-10¡±,
+       avg(m) filter (where t between 10 and 15) as "avg_m in region 10-15¡± 
+from Measurements;
+
+e)Find those times t at which the global maximum was recorded.
+
+select t,max(m) as max_m from Measurements 
+where m=(select max(m) from Measurements) group by t;
+
+Aufgabe2
+a)
+
+select level_a,level_b,level_c,level_d,sum(leaf_value) from Tree
+group by rollup(level_a,level_b,level_c,level_d);
+
+b)
+
+select level_a,level_b,level_c,level_d,count(*) as leaf_count from Tree
+group by rollup(level_a,level_b,level_c,level_d);
+
+c)
+
+select level_a,level_b,level_c,level_d,max(leaf_value) as winner from Tree
+group by rollup(level_a,level_b,level_c,level_d);
+

@@ -1,0 +1,13 @@
+
+1) 10
+
+
+2) 10
+
+a) Dino ist richtig. b) sollte eigentlich als Cross erkannt werden, aber bone passt auch :)
+c) Ein Pentagramm hat eigentlich noch durchgezogene Linien. c) sollte als star erkannt werden. Rest passt :)
+
+
+3) 8
+
+Ihr hättet hier ROWS FROM verwenden sollen. -2p

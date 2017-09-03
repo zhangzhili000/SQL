@@ -1,0 +1,35 @@
+1. 
+FROM ( VALUES (1, '2':: MONEY ,4) ,(2,'$5 .72 ' ,1.32) ,(3,'$2 ':: MONEY ,5.77) )
+Extract the FROM-clause of this query into a permanent table P 
+
+2. 
+Write an SQL query which uses geometric objects and operations to estimate the value of pi using the "Monte Carlo method":
+
+1) Place a circle c with radius r = 1/2 at point m = ( 1/2 ; 1/2 ). The area of c is pir^2 = pi/4.
+
+2) Generate random points p in unit square (0;0) - (1;1). The area of the square is 1.
+
+3.
+(a) 
+temporary table JSON_data
+CREATE TEMPORARY TABLE JSON_data (
+data JSON
+);
+COPY JSON_data FROM E'/ ABSOLUTE / path /to/ AllCards . json / here ';
+a permanent table MTJ with a suitable PRIMARY KEY
+CREATE TABLE MTJ (
+name TEXT PRIMARY KEY ,
+manaCost TEXT ,
+cmc NUMERIC ,
+type TEXT ,
+text TEXT ,
+power TEXT ,
+toughness TEXT
+);
+write an SQL query which accesses the JSON attributes from table JSON_data and populates
+table MTJ with their values.
+(b) List the cards with maximum and minimum cmc value. Disregard cards with a cmc value of 0 or less.
+(c) List all cards of type Enchantment but exclude cards of type Enchantment-Aura.
+(d) List the first five cards with the highest cmc. The listed cards should satisfy the following predicates:
+Power or toughness are greater than 14 or power is less than toughness. Ignore cards with power or toughness containing the character *.
+(e) List all cards with names in ascending order. The manaCost has to contain at least one and at most three U.

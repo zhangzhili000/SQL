@@ -1,0 +1,39 @@
+1.
+Rewrite the following SQL queries using table TEXT_Arrays without using the built-in arrays or array operations.
+
+(a) SELECT t.arr [1] AS elem
+FROM T AS t
+WHERE t. a_id = 1;
+(b) SELECT array_length (t.arr ,1) AS len
+FROM T AS t
+WHERE t. a_id = 1;
+(c) SELECT a AS elems
+FROM T AS t,
+unnest (t.arr) AS a
+WHERE t. a_id = 2;
+(d) SELECT array_position (t.arr , 'b') AS pos
+FROM T AS t
+WHERE t. a_id = 1;
+(e) TABLE T
+UNION
+SELECT r.v + 1 AS a_id , t. arr || 'd':: TEXT AS arr
+FROM T AS t,
+( SELECT MAX(t. a_id )
+FROM T AS t) AS r(v)
+WHERE t. a_id = 1;
+
+2. 
+CREATE TABLE Matrices (
+matrix TEXT [][] NOT NULL
+);
+Write an SQL query to transpose each array.
+
+3. 
+we define a table Trees of array-encoded trees as follows.
+CREATE TABLE Trees (
+tree INTEGER PRIMARY KEY ,
+parents INTEGER [],
+labels NUMERIC []
+);
+
+Write an SQL query which, for each non-leaf node n, determines the label sum of n's children.

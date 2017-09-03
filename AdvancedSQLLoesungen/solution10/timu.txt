@@ -1,0 +1,22 @@
+1. 
+
+CREATE TABLE Planes (
+plane INTEGER PRIMARY KEY ,
+allowance INTEGER NOT NULL
+);
+CREATE TABLE Items (
+item INTEGER PRIMARY KEY ,
+weight INTEGER NOT NULL
+);
+Write an SQL query which determines the planes you can board where the total weight of (some of) your recorded items matches the baggage allowance as closely as possible.
+
+2. Traveling Salesman
+
+CREATE TABLE Roads (
+here TEXT ,
+dist INTEGER ,
+there TEXT ,
+PRIMARY KEY (here , there )
+);
+(a) Write a common-table expression (CTE), which extracts each unique city name from the table roads into a table with a single column name.
+(b) Using the CTE of (a), write an SQL query which returns the shortest path which starts in an arbitrary city, visits every other city once and then returns back to the city you started from for any graph G.
